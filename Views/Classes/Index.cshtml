@@ -1,0 +1,151 @@
+﻿@model IEnumerable<PFSSITEWITHOUTENTITY.Models.Class>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Classes</h1>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.SessionId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ClassName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Description)
+            </th>
+            <th>
+                <a onclick="openCreateModel()" class="btn btn-sm btn-success">
+                    <i class="fa fa-plus"></i> New
+                </a>
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Session)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ClassName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Description)
+                </td>
+                <td>
+                    <div class="btn-group btn-group-sm">
+                        <a class="btn btn-sm btn-secondary" onclick="openEditModel(@item.ClassId)"> <i class="fa fa-pen"></i></a>
+                        <a onclick="openDetailModel(@item.ClassId)" class="btn btn-sm btn-dark"> <i class="fa fa-list"></i></a>
+                        <form asp-action="Delete" asp-route-id="@item.ClassId">
+                            <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure to delete this record?')">
+                                <i class="fa fa-trash"></i>
+                            </button>
+                        </form>
+                    </div>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<div id="myModal" class="modal fade">
+    <div class="modal-dialog">
+        <div class="modal-content" id="_DetailsModel">
+            @Html.Partial("Details", new PFSSITEWITHOUTENTITY.Models.Class())
+        </div>
+    </div>
+</div>
+
+<div id="myModalCreate" class="modal fade">
+    <div class="modal-dialog">
+        <div class="modal-content" id="_CreateModel">
+            @Html.Partial("Create", new PFSSITEWITHOUTENTITY.ViewModel.ClassVM())
+        </div>
+    </div>
+</div>
+
+<div id="myModalEdit" class="modal fade">
+    <div class="modal-dialog">
+        <div class="modal-content" id="_EditModel">
+            @Html.Partial("Edit", new PFSSITEWITHOUTENTITY.ViewModel.ClassVM())
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    function openDetailModel(detailid) {
+        $.ajax({
+            url: '/Classes/Details',
+            type: 'Get', // or 'GET' depending on your request type
+            data: { id: detailid },
+            success: function (result) {
+                // Handle success
+                $("#_DetailsModel").html(result);
+                $('#myModal').modal('show');
+            },
+            error: function (xhr, status, error) {
+                if (xhr.status === 400) {
+                    // Handle the 400 Bad Request error
+                    var errorMessage = xhr.responseText;
+                    alert('Error: ' + errorMessage);
+                } else {
+                    // Handle other error cases
+                    alert('An error occurred: ' + status + ' - ' + error);
+                }
+            }
+        });
+
+    }
+    function openCreateModel() {
+        $.ajax({
+            url: '/Classes/Create',
+            type: 'Get', // or 'GET' depending on your request type
+            success: function (result) {
+                // Handle success
+                $("#_CreateModel").html(result);
+                $('#myModalCreate').modal('show');
+            },
+            error: function (xhr, status, error) {
+                if (xhr.status === 400) {
+                    // Handle the 400 Bad Request error
+                    var errorMessage = xhr.responseText;
+                    alert('Error: ' + errorMessage);
+                } else {
+                    // Handle other error cases
+                    alert('An error occurred: ' + status + ' - ' + error);
+                }
+            }
+        });
+
+    }
+    function openEditModel(editid) {
+        $.ajax({
+            url: '/Classes/Edit',
+            type: 'Get', // or 'GET' depending on your request type
+            data: { id: editid },
+            success: function (result) {
+                // Handle success
+                $("#_EditModel").html(result);
+                $('#myModalEdit').modal('show');
+            },
+            error: function (xhr, status, error) {
+                if (xhr.status === 400) {
+                    // Handle the 400 Bad Request error
+                    var errorMessage = xhr.responseText;
+                    alert('Error: ' + errorMessage);
+                } else {
+                    // Handle other error cases
+                    alert('An error occurred: ' + status + ' - ' + error);
+                }
+            }
+        });
+
+    }
+
+</script>
