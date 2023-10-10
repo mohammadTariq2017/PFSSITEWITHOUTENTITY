@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -19,10 +20,24 @@ namespace PFSSITEWITHOUTENTITY.Controllers
         }
 
         // GET: Classes
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int page = 1, int pageSize = 5, string filter="")
         {
             var classList = _classdataAccess.GetAllClasses();
-            return View(classList);
+            
+            if(!string.IsNullOrEmpty(filter))
+                classList=classList.Where(x=>x.ClassName.Contains(filter)).ToList();
+
+            var totalItems = classList.Count;
+            var totalPages = (int)Math.Ceiling(totalItems / (double)pageSize);
+
+            var lstClass = classList.Skip((page - 1) * pageSize)
+                                    .Take(pageSize)
+                                    .ToList();
+
+            ViewBag.TotalItems = totalItems;
+            ViewBag.TotalPages = totalPages;
+            ViewBag.CurrentPage = page;
+            return View(lstClass);
         }
 
         public async Task<PartialViewResult> Details(int? id)

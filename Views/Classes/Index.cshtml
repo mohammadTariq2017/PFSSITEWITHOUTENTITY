@@ -5,7 +5,17 @@
 }
 
 <h1>Classes</h1>
-
+<div class="right m-r-10">
+    <form method="post">
+        <div class="row">
+            <div class="col-sm-6">
+                <input type="text" class="form-control" value="" name="filter" id="search" />
+            </div><div class="col-sm-2">
+                <button class="btn btn-sm btn-primary" type="submit">search</button>
+            </div>
+        </div>
+    </form>
+</div>
 <table class="table">
     <thead>
         <tr>
@@ -22,6 +32,7 @@
                 <a onclick="openCreateModel()" class="btn btn-sm btn-success">
                     <i class="fa fa-plus"></i> New
                 </a>
+
             </th>
         </tr>
     </thead>
@@ -53,7 +64,12 @@
         }
     </tbody>
 </table>
-
+<div class="pagination">
+    @for (var i = 1; i <= ViewBag.TotalPages; i++)
+    {
+        <a class="btn btn-sm btn-primary" href="/Classes/Index?page=@i">@i</a>
+    }
+</div>
 <div id="myModal" class="modal fade">
     <div class="modal-dialog">
         <div class="modal-content" id="_DetailsModel">
@@ -79,6 +95,7 @@
 </div>
 
 <script type="text/javascript">
+
     function openDetailModel(detailid) {
         $.ajax({
             url: '/Classes/Details',
